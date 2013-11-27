@@ -54,6 +54,10 @@ ipch/
 
 # ReSharper is a .NET coding add-in
 _ReSharper*
+*.DotSettings
+
+# GhostDoc
+*.GhostDoc.xml
 
 # NCrunch
 *.ncrunch*
