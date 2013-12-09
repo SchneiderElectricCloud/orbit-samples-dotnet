@@ -3,17 +3,17 @@
 This repository contains the Orbit Developer Samples for .NET (C# source code).
 
 ## Instructions
-1. Optionally fork the repository
-2. Clone the repository or download the .zip file
-3. Open the DeveloperSamples.sln in Visual Studio 2012 (or greater)
-4. In the Solution Explorer, right click on Solution 'DeveloperSamples' and select "Manage NuGet Packages for Solution...".
-	- If you see a message at the top of "Manage NuGet Packages" dialog that says: "Some NuGet packages are missing from this solution. Click to restore from your online package sources", click the "Restore" button. This will download any missing packages from NuGet.
-	- Alternatively, you can just build twice: the first build will trigger NuGet package restore, and again to build the solution.
+1. Optionally fork the repository.
+2. Clone the repository or download the .zip file.
+3. Open the DeveloperSamples.sln file in Visual Studio 2012 or later.
+4. In the Solution Explorer pane, right-click the solution node (Solution 'DeveloperSamples') and select "Manage NuGet Packages for Solution...".
+	- You may receive a message at the top of the Manage NuGet Packages dialog asking you to restore missing packages. If so, click the Restore button to have Visual Studio download any missing packages from NuGet.
+	- Alternatively, you can build the solution twice. The first build will trigger NuGet package restore. The second attempt will build the solution.
 
 ## Requirements
-1. Visual Studio 2012 or 2013 (Express version should work fine)
-2. Requires .NET Framework 4.5 (or greater)
-3. Requires a Schneider Electric Orbit account
+1. Visual Studio 2012 or 2013 (Express or paid versions).
+2. .NET Framework 4.5 or later.
+3. A <a href="https://infrastructurecommunity.schneider-electric.com/community/products/orbit">Schneider Electric Orbit account</a>.
 
 ## Samples
 
