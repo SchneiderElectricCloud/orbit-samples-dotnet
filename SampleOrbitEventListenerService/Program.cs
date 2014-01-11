@@ -33,7 +33,6 @@ namespace SampleOrbitEventListenerService
 
         static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            //Console.WriteLine("Unhandled exception: {0}", e.ExceptionObject as Exception);
             Log.ErrorException("Unhandled exception", e.ExceptionObject as Exception);
         }
     }

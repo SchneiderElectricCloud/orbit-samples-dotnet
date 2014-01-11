@@ -14,7 +14,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         IMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesApi _api = new TaskServicesApi();
+        readonly TaskServicesClient _client = new TaskServicesClient();
 
         const string InspectionTaskTypeName = "WaterMainValveInspection";
         static TaskTypeResource _inspectionTaskType;
@@ -22,11 +22,15 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         const string RepairTaskTypeName = "WaterMainValveRepair";
         static TaskTypeResource _repairTaskType;
 
+        public WaterMainValueInspectionCompletedHandler(TaskServicesClient client)
+        {
+            _client = client;
+        }
+
         public async void Handle(TaskUpdated message)
         {
             EnsureInitialized();
-            Config config = Config.Global;
-            TaskResource task = await _api.GetTaskAsync(message.TaskId);
+            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
             // For example: is this a 
             if (IsWaterMainValveInspectionTaskType(task))
@@ -48,16 +52,15 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         {
             EnsureInitialized();
             Config config = Config.Global;
-            TaskResource task = await _api.GetTaskAsync(message.TaskId);
+            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
-            // For example: is this a 
             if (IsWaterMainValveInspectionTaskType(task))
             {
                 Log.Debug("Processing completed WaterMainValveInspection task: {0}", message.TaskId);
                 if (TaskNeedsRepair(task))
                 {
                     Log.Debug("--> Task needs repair");
-                    InspectorResource inspector = await _api.GetInspectorAsync(config.AssignToUpn);
+                    InspectorResource inspector = await _client.Inspectors.GetAsync(config.AssignToUpn);
 
                     TaskResource targetTask = _repairTaskType.ConstructTask();
                     targetTask.Status = Status.New;
@@ -65,7 +68,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
                     targetTask.CopyLocationFrom(task);
                     targetTask.CopyPropertiesFrom(task);
 
-                    TaskResource createdTask = await _api.CreateTask(targetTask);
+                    TaskResource createdTask = await _client.Tasks.PostAsync(targetTask);
                     Log.Info("--> Created [{0}] task: {1} ({2})", 
                         _repairTaskType.DisplayName, createdTask.ID, createdTask.DisplayName);
                 }
@@ -79,10 +82,10 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         void EnsureInitialized()
         {
             LazyInitializer.EnsureInitialized(ref _inspectionTaskType,
-                () => _api.GetCurrentTaskTypeAsync(InspectionTaskTypeName).Result);
+                () => _client.TaskTypes.GetAsync(InspectionTaskTypeName).Result);
 
-            LazyInitializer.EnsureInitialized(ref _repairTaskType, 
-                () => _api.GetCurrentTaskTypeAsync(RepairTaskTypeName).Result);
+            LazyInitializer.EnsureInitialized(ref _repairTaskType,
+                () => _client.TaskTypes.GetAsync(RepairTaskTypeName).Result);
         }
 
         bool IsWaterMainValveInspectionTaskType(TaskResource task)

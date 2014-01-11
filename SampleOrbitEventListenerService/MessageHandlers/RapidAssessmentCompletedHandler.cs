@@ -8,10 +8,10 @@ using SE.Orbit.TaskServices;
 
 namespace SampleOrbitEventListenerService.MessageHandlers
 {
-    public class RapidAssessmentCompletedHandler : IMessageHandler<TaskCompleted>
+    public class RapidAssessmentCompletedHandler// : IMessageHandler<TaskCompleted>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesApi _api = new TaskServicesApi();
+        readonly TaskServicesClient _client;
 
         const string SourceTaskTypeName = "RapidAssessment";
         static TaskTypeResource _sourceTaskType;
@@ -19,11 +19,16 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         const string TargetTaskTypeName = "DetailedAssessment";
         static TaskTypeResource _targetTaskType;
 
+        public RapidAssessmentCompletedHandler(TaskServicesClient client)
+        {
+            _client = client;
+        }
+
         public async void Handle(TaskCompleted message)
         {
             EnsureInitialized();
             Config config = Config.Global;
-            TaskResource task = await _api.GetTaskAsync(message.TaskId);
+            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
             // For example: is this a 
             if (IsSourceTaskType(task))
@@ -32,7 +37,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
                 if (ShouldCreateTargetTaskType(task))
                 {
                     Log.Debug("--> Task needs {0}", TargetTaskTypeName);
-                    InspectorResource inspector = await _api.GetInspectorAsync(config.AssignToUpn);
+                    InspectorResource inspector = await _client.Inspectors.GetAsync(config.AssignToUpn);
 
                     TaskResource targetTask = _targetTaskType.ConstructTask();
                     targetTask.Status = Status.New;
@@ -40,7 +45,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
                     targetTask.CopyLocationFrom(task);
                     targetTask.CopyPropertiesFrom(task);
 
-                    TaskResource createdTask = await _api.CreateTask(targetTask);
+                    TaskResource createdTask = await _client.Tasks.PostAsync(targetTask);
                     Log.Info("--> Created [{0}] task: {1} ({2})", 
                         _targetTaskType.DisplayName, createdTask.ID, createdTask.DisplayName);
                 }
@@ -54,10 +59,10 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         void EnsureInitialized()
         {
             LazyInitializer.EnsureInitialized(ref _sourceTaskType,
-                () => _api.GetCurrentTaskTypeAsync(SourceTaskTypeName).Result);
+                () => _client.TaskTypes.GetAsync(SourceTaskTypeName).Result);
 
-            LazyInitializer.EnsureInitialized(ref _targetTaskType, 
-                () => _api.GetCurrentTaskTypeAsync(TargetTaskTypeName).Result);
+            LazyInitializer.EnsureInitialized(ref _targetTaskType,
+                () => _client.TaskTypes.GetAsync(TargetTaskTypeName).Result);
         }
 
         bool IsSourceTaskType(TaskResource task)

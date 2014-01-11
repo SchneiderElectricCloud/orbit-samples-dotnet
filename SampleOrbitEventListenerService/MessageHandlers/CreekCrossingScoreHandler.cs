@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.BusinessLogic;
 using SampleOrbitEventListenerService.Extensions;
@@ -12,15 +13,20 @@ namespace SampleOrbitEventListenerService.MessageHandlers
     public class CreekCrossingScoreHandler : IMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesApi _api = new TaskServicesApi();
+        readonly TaskServicesClient _client;
 
         const string SourceTaskTypeName = "WastewaterCreekCrossing";
         static TaskTypeResource _sourceTaskType;
 
+        public CreekCrossingScoreHandler(TaskServicesClient client)
+        {
+            _client = client;
+        }
+
         public async void Handle(TaskUpdated message)
         {
             EnsureInitialized();
-            TaskResource task = await _api.GetTaskAsync(message.TaskId);
+            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
             if (IsSourceTaskType(task) && task.IsCompleted())
             {
@@ -36,7 +42,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
                 {
                     calculator.WriteScore(task, newScore);
 
-                    TaskResource updatedTask = await _api.UpdateTask(task);
+                    TaskResource updatedTask = await _client.Tasks.PutAsync(task);
                     Log.Info("--> Score has changed... updating task {0}", updatedTask.ID);
                 }
                 else
@@ -49,7 +55,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         void EnsureInitialized()
         {
             LazyInitializer.EnsureInitialized(ref _sourceTaskType,
-                () => _api.GetCurrentTaskTypeAsync(SourceTaskTypeName).Result);
+                () => _client.TaskTypes.GetAsync(SourceTaskTypeName).Result);
         }
 
         bool IsSourceTaskType(TaskResource task)

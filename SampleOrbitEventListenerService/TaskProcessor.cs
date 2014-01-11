@@ -6,6 +6,8 @@ using Microsoft.ServiceBus.Messaging;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
 using SE.Orbit.Services.ServiceBus;
+using SE.Orbit.TaskServices;
+using TinyIoC;
 using Topshelf;
 
 namespace SampleOrbitEventListenerService
@@ -33,6 +35,17 @@ namespace SampleOrbitEventListenerService
             _client = SubscriptionClient.Create(topic, subscription, ReceiveMode.PeekLock);
             Log.Debug("Settings: TaskServicesUrl={0}", Config.Global.TaskServicesUrl);
             Log.Debug("Settings: Topic/Subscription={0}/{1}", topic, subscription);
+
+            // Setup the task services client used to communicate with Orbit services.
+            // Since this application needs to run without user-interaction (i.e., as
+            // a Windows Service), we use an ApiKey for authentication.
+            var serviceClient = new TaskServicesClient();
+            serviceClient.UseApiKey(Guid.Parse(Config.Global.ApiKey));
+
+            // Register the task services client instance with the IoC container. This
+            // allows the IMessageHandler to access it (e.g., using constructor injection).
+            TinyIoCContainer container = TinyIoCContainer.Current;
+            container.Register(serviceClient);
 
             // You can use the subscription client's reliable receive loop directly by
             // calling the OnMessage() method. However, in this sample, we use the Orbit
