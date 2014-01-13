@@ -8,7 +8,7 @@ using SE.Orbit.TaskServices;
 
 namespace SampleOrbitEventListenerService.MessageHandlers
 {
-    public class RapidAssessmentScoreHandler// : IMessageHandler<TaskUpdated>
+    public class RapidAssessmentScoreHandler : IMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
         readonly TaskServicesClient _client;
