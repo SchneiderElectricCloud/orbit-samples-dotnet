@@ -111,12 +111,207 @@
     <Compile Include="MessageHandlers\TaskUpdatedHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Service References\EtaDirect.ActivityManagement\Reference.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </Compile>
     <Compile Include="TaskProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="README.md" />
+    <None Include="Service References\EtaDirect.ActivityManagement\mobile_client.wsdl" />
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.activity_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.cancel_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.complete_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.create_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.create_customer_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.create_customer_requestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.create_inventory_requestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.create_resource_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.create_resource_requestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.deinstall_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.delay_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.delete_fileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.delete_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.end_routeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.exchange_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.exchange_inventory_response_element.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_activity_linksResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_activity_links_response_element.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_activity_work_skillsResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_activity_work_skills_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_customer_inventory_listResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_customer_request_listResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_fileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_file_response_element.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_inventory_request_listResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_requestResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_required_inventoriesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_required_inventories_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_resource_inventory_listResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_resource_preferencesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_resource_preferences_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_resource_request_listResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_routeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.get_userResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.install_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.inventory_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.link_activitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.prework_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.reopen_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.request_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.search_activitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.set_fileResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.set_required_inventoriesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.set_resource_preferencesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.simple_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.start_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.start_routeResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.suspend_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.undo_deinstall_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.undo_install_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.unlink_activitiesResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.update_activityResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.update_inventoryResponse.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\SampleOrbitEventListenerService.EtaDirect.ActivityManagement.user_response.datasource">
+      <DependentUpon>Reference.svcmap</DependentUpon>
+    </None>
+    <None Include="Service References\EtaDirect.ActivityManagement\xmlmime.xsd">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadataStorage Include="Service References\EtaDirect.ActivityManagement\" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EtaDirect.ActivityManagement\configuration91.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EtaDirect.ActivityManagement\configuration.svcinfo" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Service References\EtaDirect.ActivityManagement\Reference.svcmap">
+      <Generator>WCF Proxy Generator</Generator>
+      <LastGenOutput>Reference.cs</LastGenOutput>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
