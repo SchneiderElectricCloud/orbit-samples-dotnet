@@ -1,4 +1,5 @@
 ﻿using System.Threading;
+using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
 using SampleOrbitEventListenerService.Extensions;
@@ -8,7 +9,7 @@ using SE.Orbit.TaskServices;
 
 namespace SampleOrbitEventListenerService.MessageHandlers
 {
-    public class RapidAssessmentCompletedHandler : IMessageHandler<TaskCompleted>
+    public class RapidAssessmentCompletedHandler : IAsyncMessageHandler<TaskCompleted>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
         readonly TaskServicesClient _client;
@@ -24,7 +25,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             _client = client;
         }
 
-        public async void Handle(TaskCompleted message)
+        public async Task Handle(TaskCompleted message)
         {
             EnsureInitialized();
             Config config = Config.Global;
