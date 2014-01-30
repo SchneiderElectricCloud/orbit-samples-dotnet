@@ -33,14 +33,14 @@ namespace SampleOrbitEventListenerService
             string topic = Config.Global.OrbitEventsTopicName;
             string subscription = Config.Global.OrbitEventsSubscriptionName;
             _client = SubscriptionClient.Create(topic, subscription, ReceiveMode.PeekLock);
-            Log.Debug("Settings: TaskServicesUrl={0}", Config.Global.TaskServicesUrl);
-            Log.Debug("Settings: Topic/Subscription={0}/{1}", topic, subscription);
+            Log.Debug("Using topic/subscription={0}/{1}", topic, subscription);
 
             // Setup the task services client used to communicate with Orbit services.
             // Since this application needs to run without user-interaction (i.e., as
             // a Windows Service), we use an ApiKey for authentication.
             var serviceClient = new TaskServicesClient();
             serviceClient.UseApiKey(Guid.Parse(Config.Global.ApiKey));
+            LogOrbitTaskServicesEndpoint(serviceClient);
 
             // Register the task services client instance with the IoC container. This
             // allows the IMessageHandler to access it (e.g., using constructor injection).
@@ -94,10 +94,33 @@ namespace SampleOrbitEventListenerService
             {
                 if (e != null && e.Exception != null)
                 {
-                    Console.WriteLine("Error processing message: {0}", e);
+                    Log.ErrorException("Exception while processing event", e.Exception);
                 }
             };
             return options;
+        }
+
+        static void LogOrbitTaskServicesEndpoint(TaskServicesClient serviceClient)
+        {
+            if (serviceClient == null) throw new ArgumentNullException("serviceClient");
+
+            try
+            {
+                // ReSharper disable once CSharpWarnings::CS0618
+                IPHostEntry entry = Dns.Resolve(serviceClient.Client.BaseAddress.Host);
+                if (entry != null && entry.AddressList != null && entry.AddressList.Length > 0)
+                {
+                    Log.Trace("Resolved host {0} to {1}", entry.HostName, entry.AddressList[0]);
+                }
+                else
+                {
+                    Log.Warn("Failed to resolve host: {0}", serviceClient.Client.BaseAddress.Host);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error("Error resolving Orbit task services host", e);
+            }
         }
     }
 }

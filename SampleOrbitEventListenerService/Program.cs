@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.Reflection;
 using System.Threading;
 using NLog;
 using Topshelf;
@@ -12,9 +14,9 @@ namespace SampleOrbitEventListenerService
         [MTAThread]
         static void Main(string[] args)
         {
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomainUnhandledException;
             Thread.CurrentThread.Name = "Main Thread";
             Thread.CurrentThread.CurrentUICulture = Thread.CurrentThread.CurrentCulture;
+            AdviseToAppDomainEvents();
 
             HostFactory.Run(x =>
             {
@@ -31,9 +33,32 @@ namespace SampleOrbitEventListenerService
             LogManager.Flush();
         }
 
-        static void CurrentDomainUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        static void AdviseToAppDomainEvents()
         {
-            Log.ErrorException("Unhandled exception", e.ExceptionObject as Exception);
+            Log.Debug("Listening for AppDomain events...");
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
+            AppDomain.CurrentDomain.AssemblyResolve += CurrentDomainOnAssemblyResolve;
+        }
+
+        static Assembly CurrentDomainOnAssemblyResolve(object sender, ResolveEventArgs e)
+        {
+            Debug.Assert(e != null);
+            if (!e.Name.Contains(".resources") && !e.Name.Contains(".XmlSerializers"))
+            {
+                Log.Warn("AssemblyResolve: {0} RequestedBy: {1}", e.Name, 
+                    (e.RequestingAssembly != null) ? e.RequestingAssembly.FullName : null);
+            }
+
+            return null;
+        }
+
+        static void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            Exception exception = e.ExceptionObject as Exception;
+            if (exception != null)
+            {
+                Log.Error("Unhandled exception", exception);
+            }
         }
     }
 }
