@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.BusinessLogic;
+using SampleOrbitEventListenerService.Extensions;
 using SE.Orbit.Services.DomainEvents;
 using SE.Orbit.Services.Interfaces;
 using SE.Orbit.TaskServices;
@@ -27,7 +28,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             EnsureInitialized();
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
-            if (IsSourceTaskType(task)/* && task.IsCompleted()*/)
+            if (task.HasTaskType(_sourceTaskType))
             {
                 var calculator = new RapidAssessmentScoreCalculator();
                 int oldScore = calculator.ReadScore(task);
@@ -55,11 +56,6 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         {
             LazyInitializer.EnsureInitialized(ref _sourceTaskType,
                 () => _client.TaskTypes.GetAsync(SourceTaskTypeName).Result);
-        }
-
-        bool IsSourceTaskType(TaskResource task)
-        {
-            return task != null && _sourceTaskType != null && task.TaskTypeID == _sourceTaskType.ID;
         }
     }
 }

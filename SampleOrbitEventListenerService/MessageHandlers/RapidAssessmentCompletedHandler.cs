@@ -32,7 +32,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
             // For example: is this a 
-            if (IsSourceTaskType(task))
+            if (task.HasTaskType(_sourceTaskType))
             {
                 Log.Debug("Processing completed {0} task: {1}", SourceTaskTypeName, message.TaskId);
                 if (ShouldCreateTargetTaskType(task))
@@ -64,11 +64,6 @@ namespace SampleOrbitEventListenerService.MessageHandlers
 
             LazyInitializer.EnsureInitialized(ref _targetTaskType,
                 () => _client.TaskTypes.GetAsync(TargetTaskTypeName).Result);
-        }
-
-        bool IsSourceTaskType(TaskResource task)
-        {
-            return task != null && _sourceTaskType != null && task.TaskTypeID == _sourceTaskType.ID;
         }
 
         bool ShouldCreateTargetTaskType(TaskResource task)

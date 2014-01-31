@@ -90,5 +90,10 @@ namespace SampleOrbitEventListenerService.Extensions
         {
             return task != null && task.Status == Status.Completed;
         }
+
+        public static bool HasTaskType(this TaskResource task, TaskTypeResource taskType)
+        {
+            return task != null && taskType != null && task.TaskTypeID == taskType.ID;
+        }
     }
 }

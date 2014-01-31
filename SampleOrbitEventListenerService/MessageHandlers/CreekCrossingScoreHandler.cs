@@ -28,7 +28,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             EnsureInitialized();
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
-            if (IsSourceTaskType(task) && task.IsCompleted())
+            if (task.HasTaskType(_sourceTaskType) && task.IsCompleted())
             {
                 var calculator = new CreekCrossingScoreCalculator();
                 int oldScore = calculator.ReadScore(task);
@@ -56,11 +56,6 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         {
             LazyInitializer.EnsureInitialized(ref _sourceTaskType,
                 () => _client.TaskTypes.GetAsync(SourceTaskTypeName).Result);
-        }
-
-        bool IsSourceTaskType(TaskResource task)
-        {
-            return task != null && _sourceTaskType != null && task.TaskTypeID == _sourceTaskType.ID;
         }
     }
 }

@@ -34,10 +34,10 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
             // For example: is this a 
-            if (IsWaterMainValveInspectionTaskType(task))
+            if (task.HasTaskType(_inspectionTaskType))
             {
                 Log.Debug("Processing updated WaterMainValveInspection task: {0}", message.TaskId);
-                if (TaskNeedsRepair(task) && TaskIsCompleted(task))
+                if (TaskNeedsRepair(task) && task.IsCompleted())
                 {
                     Log.Warn("--> Task {0} was updated yet (already) completed and needs repair..." +
                     "a repair task may be required (more information required)", task.ID);
@@ -55,7 +55,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             Config config = Config.Global;
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
 
-            if (IsWaterMainValveInspectionTaskType(task))
+            if (task.HasTaskType(_inspectionTaskType))
             {
                 Log.Debug("Processing completed WaterMainValveInspection task: {0}", message.TaskId);
                 if (TaskNeedsRepair(task))
@@ -87,16 +87,6 @@ namespace SampleOrbitEventListenerService.MessageHandlers
 
             LazyInitializer.EnsureInitialized(ref _repairTaskType,
                 () => _client.TaskTypes.GetAsync(RepairTaskTypeName).Result);
-        }
-
-        bool IsWaterMainValveInspectionTaskType(TaskResource task)
-        {
-            return task.TaskTypeID == _inspectionTaskType.ID;
-        }
-
-        bool TaskIsCompleted(TaskResource task)
-        {
-            return task.Status == Status.Completed;
         }
 
         bool TaskNeedsRepair(TaskResource task)
