@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
 using SampleOrbitEventListenerService.Extensions;
@@ -10,12 +9,12 @@ using SE.Orbit.TaskServices;
 
 namespace SampleOrbitEventListenerService.MessageHandlers
 {
-    public class WaterMainValueInspectionCompletedHandler :
-        IAsyncMessageHandler<TaskCompleted>,
-        IAsyncMessageHandler<TaskUpdated>
+    public class WaterMainValueInspectionCompletedHandler : 
+        IMessageHandler<TaskCompleted>,
+        IMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesClient _client;
+        readonly TaskServicesClient _client = new TaskServicesClient();
 
         const string InspectionTaskTypeName = "WaterMainValveInspection";
         static TaskTypeResource _inspectionTaskType;
@@ -28,7 +27,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             _client = client;
         }
 
-        public async Task Handle(TaskUpdated message)
+        public async void Handle(TaskUpdated message)
         {
             EnsureInitialized();
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
@@ -49,7 +48,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             }
         }
 
-        public async Task Handle(TaskCompleted message)
+        public async void Handle(TaskCompleted message)
         {
             EnsureInitialized();
             Config config = Config.Global;
