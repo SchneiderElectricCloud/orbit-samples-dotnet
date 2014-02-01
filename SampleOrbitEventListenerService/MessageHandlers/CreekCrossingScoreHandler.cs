@@ -10,7 +10,7 @@ using SE.Orbit.TaskServices;
 
 namespace SampleOrbitEventListenerService.MessageHandlers
 {
-    public class CreekCrossingScoreHandler : IMessageHandler<TaskUpdated>
+    public class CreekCrossingScoreHandler : IAsyncMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
         readonly TaskServicesClient _client;
@@ -23,7 +23,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             _client = client;
         }
 
-        public async void Handle(TaskUpdated message)
+        public async Task Handle(TaskUpdated message)
         {
             EnsureInitialized();
             TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
