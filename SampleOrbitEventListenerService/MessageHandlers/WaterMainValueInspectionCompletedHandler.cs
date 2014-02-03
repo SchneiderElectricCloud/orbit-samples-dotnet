@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
 using SampleOrbitEventListenerService.Extensions;
+using SampleOrbitEventListenerService.Services;
 using SE.Orbit.Services.DomainEvents;
 using SE.Orbit.Services.Interfaces;
 using SE.Orbit.TaskServices;
@@ -15,26 +16,24 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         IAsyncMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesClient _client = new TaskServicesClient();
+        readonly OrbitServiceFacade _orbit;
 
         const string InspectionTaskTypeName = "WaterMainValveInspection";
-        static TaskTypeResource _inspectionTaskType;
-
         const string RepairTaskTypeName = "WaterMainValveRepair";
-        static TaskTypeResource _repairTaskType;
 
-        public WaterMainValueInspectionCompletedHandler(TaskServicesClient client)
+        public WaterMainValueInspectionCompletedHandler(OrbitServiceFacade orbit)
         {
-            _client = client;
+            _orbit = orbit;
         }
 
         public async Task Handle(TaskUpdated message)
         {
-            EnsureInitialized();
-            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
+            TaskTypeResource inspectionTaskType = await _orbit.GetTaskTypeAsync(InspectionTaskTypeName);
+
+            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
 
             // For example: is this a 
-            if (task.HasTaskType(_inspectionTaskType))
+            if (task.HasTaskType(inspectionTaskType))
             {
                 Log.Debug("Processing updated WaterMainValveInspection task: {0}", message.TaskId);
                 if (TaskNeedsRepair(task) && task.IsCompleted())
@@ -51,42 +50,35 @@ namespace SampleOrbitEventListenerService.MessageHandlers
 
         public async Task Handle(TaskCompleted message)
         {
-            EnsureInitialized();
-            Config config = Config.Global;
-            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
+            TaskTypeResource inspectionTaskType = await _orbit.GetTaskTypeAsync(InspectionTaskTypeName);
+            TaskTypeResource repairTaskType = await _orbit.GetTaskTypeAsync(RepairTaskTypeName);
 
-            if (task.HasTaskType(_inspectionTaskType))
+            Config config = Config.Global;
+            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
+
+            if (task.HasTaskType(inspectionTaskType))
             {
                 Log.Debug("Processing completed WaterMainValveInspection task: {0}", message.TaskId);
                 if (TaskNeedsRepair(task))
                 {
                     Log.Debug("--> Task needs repair");
-                    InspectorResource inspector = await _client.Inspectors.GetAsync(config.AssignToUpn);
+                    InspectorResource inspector = await _orbit.GetInspectorAsync(config.AssignToUpn);
 
-                    TaskResource targetTask = _repairTaskType.ConstructTask();
+                    TaskResource targetTask = repairTaskType.ConstructTask();
                     targetTask.Status = Status.New;
                     targetTask.AssignTo(inspector);
                     targetTask.CopyLocationFrom(task);
                     targetTask.CopyPropertiesFrom(task);
 
-                    TaskResource createdTask = await _client.Tasks.PostAsync(targetTask);
+                    TaskResource createdTask = await _orbit.UpdateTaskAsync(targetTask);
                     Log.Info("--> Created [{0}] task: {1} ({2})", 
-                        _repairTaskType.DisplayName, createdTask.ID, createdTask.DisplayName);
+                        repairTaskType.DisplayName, createdTask.ID, createdTask.DisplayName);
                 }
                 else
                 {
                     Log.Debug("--> Task does not require repair");
                 }
             }
-        }
-
-        void EnsureInitialized()
-        {
-            LazyInitializer.EnsureInitialized(ref _inspectionTaskType,
-                () => _client.TaskTypes.GetAsync(InspectionTaskTypeName).Result);
-
-            LazyInitializer.EnsureInitialized(ref _repairTaskType,
-                () => _client.TaskTypes.GetAsync(RepairTaskTypeName).Result);
         }
 
         bool TaskNeedsRepair(TaskResource task)

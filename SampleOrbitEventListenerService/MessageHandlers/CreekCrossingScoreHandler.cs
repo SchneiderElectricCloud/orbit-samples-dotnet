@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.BusinessLogic;
 using SampleOrbitEventListenerService.Extensions;
+using SampleOrbitEventListenerService.Services;
 using SE.Orbit.Services.DomainEvents;
 using SE.Orbit.Services.Interfaces;
 using SE.Orbit.TaskServices;
@@ -13,22 +14,22 @@ namespace SampleOrbitEventListenerService.MessageHandlers
     public class CreekCrossingScoreHandler : IAsyncMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesClient _client;
+        readonly OrbitServiceFacade _orbit;
 
         const string SourceTaskTypeName = "WastewaterCreekCrossing";
-        static TaskTypeResource _sourceTaskType;
 
-        public CreekCrossingScoreHandler(TaskServicesClient client)
+        public CreekCrossingScoreHandler(OrbitServiceFacade orbit)
         {
-            _client = client;
+            _orbit = orbit;
         }
 
         public async Task Handle(TaskUpdated message)
         {
-            EnsureInitialized();
-            TaskResource task = await _client.Tasks.GetAsync(message.TaskId);
+            TaskTypeResource sourceTaskType = await _orbit.GetTaskTypeAsync(SourceTaskTypeName);
 
-            if (task.HasTaskType(_sourceTaskType) && task.IsCompleted())
+            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
+
+            if (task.HasTaskType(sourceTaskType) && task.IsCompleted())
             {
                 var calculator = new CreekCrossingScoreCalculator();
                 int oldScore = calculator.ReadScore(task);
@@ -42,7 +43,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
                 {
                     calculator.WriteScore(task, newScore);
 
-                    TaskResource updatedTask = await _client.Tasks.PutAsync(task);
+                    TaskResource updatedTask = await _orbit.UpdateTaskAsync(task);
                     Log.Info("--> Score has changed... updating task {0}", updatedTask.ID);
                 }
                 else
@@ -50,12 +51,6 @@ namespace SampleOrbitEventListenerService.MessageHandlers
                     Log.Debug("--> Score is unchanged");
                 }
             }
-        }
-
-        void EnsureInitialized()
-        {
-            LazyInitializer.EnsureInitialized(ref _sourceTaskType,
-                () => _client.TaskTypes.GetAsync(SourceTaskTypeName).Result);
         }
     }
 }
