@@ -74,6 +74,7 @@ namespace SampleOrbitEventListenerService.Services
                             // this project across tenants, we'll just introduce a 'missing' task type
                             // resource.
                             taskType = CreateMissingTaskTypeResource();
+                            Log.Debug("TaskType {0} not found... will be ignored", ancestralName);
                             break;
                         default:
                             throw;
@@ -84,13 +85,21 @@ namespace SampleOrbitEventListenerService.Services
                 // type definition from Orbit Task Services. Cache the value for re-use.
                 _taskTypeCache.Set(ancestralName, taskType, CreateCacheItemPolicy());
             }
+
+            // We create a 'missing' task type indicator when the task type doesn't exist
+            // to distinguish between a cache miss, but we want to return 'null' to the caller
+            if (taskType.ID == Guid.Empty)
+            {
+                taskType = null;
+            }
+
             return taskType;
         }
 
         public async Task<InspectorResource> GetInspectorAsync(string upn)
         {
             InspectorResource inspector = _inspectorCache.Get(upn);
-            if (inspector == null)
+            if (inspector == null) // cache miss
             {
                 inspector = await _client.Inspectors.GetAsync(upn);
 
@@ -107,7 +116,7 @@ namespace SampleOrbitEventListenerService.Services
             // scenario, we'll fabricate a fake task type resource that represents 'missing'
             var taskType = new TaskTypeResource
             {
-                DisplayName = "MissingTaskType",
+                Name = "Missing",
                 ID = Guid.Empty,
             };
             return taskType;

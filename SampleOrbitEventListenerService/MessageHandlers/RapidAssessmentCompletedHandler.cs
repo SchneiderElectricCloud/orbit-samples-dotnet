@@ -28,31 +28,36 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             TaskTypeResource sourceTaskType = await _orbit.GetTaskTypeAsync(SourceTaskTypeName);
             TaskTypeResource targetTaskType = await _orbit.GetTaskTypeAsync(TargetTaskTypeName);
 
-            Config config = Config.Global;
-            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
-
-            // For example: is this a 
-            if (task.HasTaskType(sourceTaskType))
+            if (sourceTaskType != null && targetTaskType != null)
             {
-                Log.Debug("Processing completed {0} task: {1}", SourceTaskTypeName, message.TaskId);
-                if (ShouldCreateTargetTaskType(task))
-                {
-                    Log.Debug("--> Task needs {0}", TargetTaskTypeName);
-                    InspectorResource inspector = await _orbit.GetInspectorAsync(config.AssignToUpn);
+                Config config = Config.Global;
+                TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
 
-                    TaskResource targetTask = targetTaskType.ConstructTask();
-                    targetTask.Status = Status.New;
-                    targetTask.AssignTo(inspector);
-                    targetTask.CopyLocationFrom(task);
-                    targetTask.CopyPropertiesFrom(task);
-
-                    TaskResource createdTask = await _orbit.CreateTaskAsync(targetTask);
-                    Log.Info("--> Created [{0}] task: {1} ({2})", 
-                        targetTaskType.DisplayName, createdTask.ID, createdTask.DisplayName);
-                }
-                else
+                // For example: is this a 
+                if (task.HasTaskType(sourceTaskType))
                 {
-                    Log.Debug("--> Task does not require {0}", TargetTaskTypeName);
+                    Log.Debug("Processing completed {0} task: {1}", SourceTaskTypeName, message.TaskId);
+                    if (ShouldCreateTargetTaskType(task))
+                    {
+                        Log.Debug("--> Task needs {0}", TargetTaskTypeName);
+                        InspectorResource inspector = await _orbit.GetInspectorAsync(config.AssignToUpn);
+
+                        TaskResource targetTask = targetTaskType.ConstructTask();
+                        targetTask.Status = Status.New;
+                        targetTask.AssignTo(inspector);
+                        targetTask.CopyLocationFrom(task);
+                        targetTask.CopyPropertiesFrom(task);
+
+                        TaskResource createdTask = await _orbit.CreateTaskAsync(targetTask);
+                        Log.Info("--> Created [{0}] task: {1} ({2})",
+                            targetTaskType.DisplayName,
+                            createdTask.ID,
+                            createdTask.DisplayName);
+                    }
+                    else
+                    {
+                        Log.Debug("--> Task does not require {0}", TargetTaskTypeName);
+                    }
                 }
             }
         }

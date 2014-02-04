@@ -26,29 +26,30 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         public async Task Handle(TaskUpdated message)
         {
             TaskTypeResource sourceTaskType = await _orbit.GetTaskTypeAsync(SourceTaskTypeName);
-
-            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
-
-            if (task.HasTaskType(sourceTaskType) && task.IsCompleted())
+            if (sourceTaskType != null)
             {
-                var calculator = new CreekCrossingScoreCalculator();
-                int oldScore = calculator.ReadScore(task);
-
-                Log.Debug("Calculating score for task: {0}", message.TaskId);
-                int newScore = calculator.CalculateScore(task);
-
-                // WARN: only update the task if the score actually changed or
-                // this could easily result in an infinite loop!
-                if (newScore != oldScore)
+                TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
+                if (task.HasTaskType(sourceTaskType) && task.IsCompleted())
                 {
-                    calculator.WriteScore(task, newScore);
+                    var calculator = new CreekCrossingScoreCalculator();
+                    int oldScore = calculator.ReadScore(task);
 
-                    TaskResource updatedTask = await _orbit.UpdateTaskAsync(task);
-                    Log.Info("--> Score has changed... updating task {0}", updatedTask.ID);
-                }
-                else
-                {
-                    Log.Debug("--> Score is unchanged");
+                    Log.Debug("Calculating score for task: {0}", message.TaskId);
+                    int newScore = calculator.CalculateScore(task);
+
+                    // WARN: only update the task if the score actually changed or
+                    // this could easily result in an infinite loop!
+                    if (newScore != oldScore)
+                    {
+                        calculator.WriteScore(task, newScore);
+
+                        TaskResource updatedTask = await _orbit.UpdateTaskAsync(task);
+                        Log.Info("--> Score has changed... updating task {0}", updatedTask.ID);
+                    }
+                    else
+                    {
+                        Log.Debug("--> Score is unchanged");
+                    }
                 }
             }
         }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
@@ -29,21 +28,24 @@ namespace SampleOrbitEventListenerService.MessageHandlers
         public async Task Handle(TaskUpdated message)
         {
             TaskTypeResource inspectionTaskType = await _orbit.GetTaskTypeAsync(InspectionTaskTypeName);
-
-            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
-
-            // For example: is this a 
-            if (task.HasTaskType(inspectionTaskType))
+            if (inspectionTaskType != null)
             {
-                Log.Debug("Processing updated WaterMainValveInspection task: {0}", message.TaskId);
-                if (TaskNeedsRepair(task) && task.IsCompleted())
+                TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
+
+                // For example: is this a 
+                if (task.HasTaskType(inspectionTaskType))
                 {
-                    Log.Warn("--> Task {0} was updated yet (already) completed and needs repair..." +
-                    "a repair task may be required (more information required)", task.ID);
-                }
-                else
-                {
-                    Log.Trace("--> Task does not require repair -- taking no further action");
+                    Log.Debug("Processing updated WaterMainValveInspection task: {0}", message.TaskId);
+                    if (TaskNeedsRepair(task) && task.IsCompleted())
+                    {
+                        Log.Warn("--> Task {0} was updated yet (already) completed and needs repair..." +
+                                 "a repair task may be required (more information required)",
+                            task.ID);
+                    }
+                    else
+                    {
+                        Log.Trace("--> Task does not require repair -- taking no further action");
+                    }
                 }
             }
         }
@@ -53,30 +55,35 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             TaskTypeResource inspectionTaskType = await _orbit.GetTaskTypeAsync(InspectionTaskTypeName);
             TaskTypeResource repairTaskType = await _orbit.GetTaskTypeAsync(RepairTaskTypeName);
 
-            Config config = Config.Global;
-            TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
-
-            if (task.HasTaskType(inspectionTaskType))
+            if (inspectionTaskType != null && repairTaskType != null)
             {
-                Log.Debug("Processing completed WaterMainValveInspection task: {0}", message.TaskId);
-                if (TaskNeedsRepair(task))
-                {
-                    Log.Debug("--> Task needs repair");
-                    InspectorResource inspector = await _orbit.GetInspectorAsync(config.AssignToUpn);
+                Config config = Config.Global;
+                TaskResource task = await _orbit.GetTaskAsync(message.TaskId);
 
-                    TaskResource targetTask = repairTaskType.ConstructTask();
-                    targetTask.Status = Status.New;
-                    targetTask.AssignTo(inspector);
-                    targetTask.CopyLocationFrom(task);
-                    targetTask.CopyPropertiesFrom(task);
-
-                    TaskResource createdTask = await _orbit.UpdateTaskAsync(targetTask);
-                    Log.Info("--> Created [{0}] task: {1} ({2})", 
-                        repairTaskType.DisplayName, createdTask.ID, createdTask.DisplayName);
-                }
-                else
+                if (task.HasTaskType(inspectionTaskType))
                 {
-                    Log.Debug("--> Task does not require repair");
+                    Log.Debug("Processing completed WaterMainValveInspection task: {0}", message.TaskId);
+                    if (TaskNeedsRepair(task))
+                    {
+                        Log.Debug("--> Task needs repair");
+                        InspectorResource inspector = await _orbit.GetInspectorAsync(config.AssignToUpn);
+
+                        TaskResource targetTask = repairTaskType.ConstructTask();
+                        targetTask.Status = Status.New;
+                        targetTask.AssignTo(inspector);
+                        targetTask.CopyLocationFrom(task);
+                        targetTask.CopyPropertiesFrom(task);
+
+                        TaskResource createdTask = await _orbit.UpdateTaskAsync(targetTask);
+                        Log.Info("--> Created [{0}] task: {1} ({2})",
+                            repairTaskType.DisplayName,
+                            createdTask.ID,
+                            createdTask.DisplayName);
+                    }
+                    else
+                    {
+                        Log.Debug("--> Task does not require repair");
+                    }
                 }
             }
         }
