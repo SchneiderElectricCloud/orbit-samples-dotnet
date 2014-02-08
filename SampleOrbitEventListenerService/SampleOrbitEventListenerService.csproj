@@ -60,13 +60,13 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Nustache.1.13.8.22\lib\net20\Nustache.Core.dll</HintPath>
     </Reference>
-    <Reference Include="SE.Orbit.Services.Core, Version=0.1.3.0, Culture=neutral, PublicKeyToken=ce9b59cbb5481882, processorArchitecture=MSIL">
+    <Reference Include="SE.Orbit.Services.Core, Version=0.2.0.0, Culture=neutral, PublicKeyToken=ce9b59cbb5481882, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SE.Orbit.Core.0.1.3\lib\net45\SE.Orbit.Services.Core.dll</HintPath>
+      <HintPath>..\packages\SE.Orbit.Core.0.2.0-rc1\lib\net45\SE.Orbit.Services.Core.dll</HintPath>
     </Reference>
     <Reference Include="SE.Orbit.Services.Integration, Version=0.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\SE.Orbit.Integration.0.2.0-rc2\lib\net45\SE.Orbit.Services.Integration.dll</HintPath>
+      <HintPath>..\packages\SE.Orbit.Integration.0.2.0-rc3\lib\net45\SE.Orbit.Services.Integration.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
