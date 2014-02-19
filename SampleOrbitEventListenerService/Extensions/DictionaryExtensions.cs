@@ -17,7 +17,22 @@ namespace SampleOrbitEventListenerService.Extensions
             {
                 try
                 {
-                    result = (T)Conversion.CTypeDynamic(value, typeof(T));
+                    if (IsNotNull(value))
+                    {
+                        if (value.GetType() == typeof(T))
+                        {
+                            // If the type of 'value' is already type T, then there is
+                            // no need for type coersion, just set value as the result
+                            result = (T)value;
+                        }
+                        else
+                        {
+                            if (typeof(T) == typeof(String) || !IsNullOrWhitespace(value))
+                            {
+                                result = (T)Conversion.CTypeDynamic(value, typeof(T));
+                            }
+                        }
+                    }
                 }
                 catch (InvalidCastException e)
                 {
@@ -31,6 +46,16 @@ namespace SampleOrbitEventListenerService.Extensions
                 }
             }
             return result;
+        }
+
+        static bool IsNullOrWhitespace(object value)
+        {
+            return value is string && string.IsNullOrWhiteSpace((string)value);
+        }
+
+        static bool IsNotNull(object value)
+        {
+            return value != null && value != DBNull.Value;
         }
     }
 }
