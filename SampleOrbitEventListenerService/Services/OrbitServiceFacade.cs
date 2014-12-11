@@ -27,7 +27,7 @@ namespace SampleOrbitEventListenerService.Services
             TaskResource task;
             try
             {
-                task = await _client.Tasks.GetAsync(taskId);
+                task = await _client.Tasks.Get(taskId).GetContentAsync();
             }
             catch (DetailedHttpRequestException e)
             {
@@ -45,12 +45,12 @@ namespace SampleOrbitEventListenerService.Services
 
         public Task<TaskResource> CreateTaskAsync(TaskResource task)
         {
-            return _client.Tasks.PostAsync(task);
+            return _client.Tasks.Create(task).GetContentAsync();
         }
 
         public Task<TaskResource> UpdateTaskAsync(TaskResource task)
         {
-            return _client.Tasks.PutAsync(task);
+            return _client.Tasks.Update(task).GetContentAsync();
         }
 
         public async Task<TaskTypeResource> GetTaskTypeAsync(string ancestralName)
@@ -61,7 +61,7 @@ namespace SampleOrbitEventListenerService.Services
                 // If taskType is null, then that means we had a cache miss. 
                 try
                 {
-                    taskType = await _client.TaskTypes.GetAsync(ancestralName);
+                    taskType = await _client.TaskTypes.Get(ancestralName).GetContentAsync();
                 }
                 catch (DetailedHttpRequestException e)
                 {
@@ -101,7 +101,7 @@ namespace SampleOrbitEventListenerService.Services
             InspectorResource inspector = _inspectorCache.Get(upn);
             if (inspector == null) // cache miss
             {
-                inspector = await _client.Inspectors.GetAsync(upn);
+                inspector = await _client.Inspectors.Get(upn).GetContentAsync();
 
                 _inspectorCache.Set(upn, inspector, CreateCacheItemPolicy());
             }
