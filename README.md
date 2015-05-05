@@ -1,6 +1,6 @@
 # orbit-samples-dotnet
 
-This repository contains the Orbit Developer Samples for .NET (C# source code).
+This repository contains the ArcFM Mobile (formerly, Orbit) Developer Samples for .NET (C# source code).
 
 ## Instructions
 1. Optionally fork the repository.
@@ -13,7 +13,7 @@ This repository contains the Orbit Developer Samples for .NET (C# source code).
 ## Requirements
 1. Visual Studio 2012 or 2013 (Express or paid versions).
 2. .NET Framework 4.5 or later.
-3. A <a href="https://infrastructurecommunity.schneider-electric.com/community/products/orbit">Schneider Electric Orbit account</a>.
+3. A <a href="https://infrastructurecommunity.schneider-electric.com/community/products/gis-products/arcfm-mobile">Schneider Electric Orbit account</a>.
 
 ## Samples
 
