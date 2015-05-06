@@ -125,6 +125,7 @@
     <Compile Include="Extensions\DictionaryExtensions.cs" />
     <Compile Include="Extensions\LinksResourceExtensions.cs" />
     <Compile Include="Extensions\TaskResourceExtensions.cs" />
+    <Compile Include="Extensions\TaskServicesClientExtensions.cs" />
     <Compile Include="Extensions\TaskTypeResourceExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="MessageHandlers\CreekCrossingScoreHandler.cs" />
@@ -136,7 +137,6 @@
     <Compile Include="MessageHandlers\TaskUpdatedHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Services\OrbitServiceFacade.cs" />
     <Compile Include="TaskProcessor.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -153,5 +153,3 @@
   </Target>
   -->
 </Project>
-
-

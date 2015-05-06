@@ -6,28 +6,20 @@ using NLog;
 using SE.Orbit.Services.Utilities;
 using SE.Orbit.TaskServices;
 
-namespace SampleOrbitEventListenerService.Services
+namespace SampleOrbitEventListenerService.Extensions
 {
-    public class OrbitServiceFacade
+    static class TaskServicesClientExtensions
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly TaskServicesClient _client;
-        readonly IsolatedCache<TaskTypeResource> _taskTypeCache;
-        readonly IsolatedCache<InspectorResource> _inspectorCache; 
+        static readonly IsolatedCache<TaskTypeResource> TaskTypeCache = new IsolatedCache<TaskTypeResource>("TaskType");
+        static readonly IsolatedCache<InspectorResource> InspectorCache = new IsolatedCache<InspectorResource>("Inspector");
 
-        public OrbitServiceFacade(TaskServicesClient client)
-        {
-            _client = client;
-            _taskTypeCache = new IsolatedCache<TaskTypeResource>("TaskType");
-            _inspectorCache = new IsolatedCache<InspectorResource>("Inspector");
-        }
-
-        public async Task<TaskResource> GetTaskAsync(Guid taskId)
+        public static async Task<TaskResource> GetTaskAsync(this TaskServicesClient client, Guid taskId)
         {
             TaskResource task;
             try
             {
-                task = await _client.Tasks.Get(taskId).GetContentAsync();
+                task = await client.Tasks.Get(taskId).GetContentAsync();
             }
             catch (DetailedHttpRequestException e)
             {
@@ -43,25 +35,25 @@ namespace SampleOrbitEventListenerService.Services
             return task;
         }
 
-        public Task<TaskResource> CreateTaskAsync(TaskResource task)
+        public static Task<TaskResource> CreateTaskAsync(this TaskServicesClient client, TaskResource task)
         {
-            return _client.Tasks.Create(task).GetContentAsync();
+            return client.Tasks.Create(task).GetContentAsync();
         }
 
-        public Task<TaskResource> UpdateTaskAsync(TaskResource task)
+        public static Task<TaskResource> UpdateTaskAsync(this TaskServicesClient client, TaskResource task)
         {
-            return _client.Tasks.Update(task).GetContentAsync();
+            return client.Tasks.Update(task).GetContentAsync();
         }
 
-        public async Task<TaskTypeResource> GetTaskTypeAsync(string ancestralName)
+        public static async Task<TaskTypeResource> GetTaskTypeAsync(this TaskServicesClient client, string ancestralName)
         {
-            TaskTypeResource taskType = _taskTypeCache.Get(ancestralName);
+            TaskTypeResource taskType = TaskTypeCache.Get(ancestralName);
             if (taskType == null)
             {
                 // If taskType is null, then that means we had a cache miss. 
                 try
                 {
-                    taskType = await _client.TaskTypes.Get(ancestralName).GetContentAsync();
+                    taskType = await client.TaskTypes.Get(ancestralName).GetContentAsync();
                 }
                 catch (DetailedHttpRequestException e)
                 {
@@ -83,7 +75,7 @@ namespace SampleOrbitEventListenerService.Services
 
                 // The taskType is non-null, which means we successfully found the task
                 // type definition from Orbit Task Services. Cache the value for re-use.
-                _taskTypeCache.Set(ancestralName, taskType, CreateCacheItemPolicy());
+                TaskTypeCache.Set(ancestralName, taskType, CreateCacheItemPolicy());
             }
 
             // We create a 'missing' task type indicator when the task type doesn't exist
@@ -96,14 +88,14 @@ namespace SampleOrbitEventListenerService.Services
             return taskType;
         }
 
-        public async Task<InspectorResource> GetInspectorAsync(string upn)
+        public static async Task<InspectorResource> GetInspectorAsync(this TaskServicesClient client, string upn)
         {
-            InspectorResource inspector = _inspectorCache.Get(upn);
+            InspectorResource inspector = InspectorCache.Get(upn);
             if (inspector == null) // cache miss
             {
-                inspector = await _client.Inspectors.Get(upn).GetContentAsync();
+                inspector = await client.Inspectors.Get(upn).GetContentAsync();
 
-                _inspectorCache.Set(upn, inspector, CreateCacheItemPolicy());
+                InspectorCache.Set(upn, inspector, CreateCacheItemPolicy());
             }
 
             return inspector;
@@ -130,4 +122,5 @@ namespace SampleOrbitEventListenerService.Services
             };
         }
     }
+
 }

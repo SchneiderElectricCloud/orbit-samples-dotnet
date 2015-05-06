@@ -5,9 +5,9 @@ using Microsoft.ServiceBus;
 using Microsoft.ServiceBus.Messaging;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
-using SampleOrbitEventListenerService.Services;
 using SE.Orbit.Services.ServiceBus;
 using SE.Orbit.TaskServices;
+using SE.Orbit.TaskServices.Authentication;
 using TinyIoC;
 using Topshelf;
 
@@ -47,8 +47,6 @@ namespace SampleOrbitEventListenerService
             // allows the IMessageHandler to access it (e.g., using constructor injection).
             TinyIoCContainer container = TinyIoCContainer.Current;
             container.Register(serviceClient);
-
-            container.Register<OrbitServiceFacade>().AsSingleton();
 
             // You can use the subscription client's reliable receive loop directly by
             // calling the OnMessage() method. However, in this sample, we use the Orbit

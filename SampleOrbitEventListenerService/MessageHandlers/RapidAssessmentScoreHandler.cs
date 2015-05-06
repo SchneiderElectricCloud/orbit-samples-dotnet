@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.BusinessLogic;
 using SampleOrbitEventListenerService.Extensions;
-using SampleOrbitEventListenerService.Services;
 using SE.Orbit.Services.DomainEvents;
 using SE.Orbit.Services.Interfaces;
 using SE.Orbit.TaskServices;
@@ -14,11 +13,11 @@ namespace SampleOrbitEventListenerService.MessageHandlers
     public class RapidAssessmentScoreHandler : IAsyncMessageHandler<TaskUpdated>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly OrbitServiceFacade _orbit;
+        readonly TaskServicesClient _orbit;
 
         const string SourceTaskTypeName = "RapidAssessment";
 
-        public RapidAssessmentScoreHandler(OrbitServiceFacade orbit)
+        public RapidAssessmentScoreHandler(TaskServicesClient orbit)
         {
             _orbit = orbit;
         }
