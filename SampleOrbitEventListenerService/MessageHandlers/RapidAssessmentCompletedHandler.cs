@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using NLog;
 using SampleOrbitEventListenerService.Configuration;
 using SampleOrbitEventListenerService.Extensions;
-using SampleOrbitEventListenerService.Services;
 using SE.Orbit.Services.DomainEvents;
 using SE.Orbit.Services.Interfaces;
 using SE.Orbit.TaskServices;
@@ -13,12 +12,12 @@ namespace SampleOrbitEventListenerService.MessageHandlers
     public class RapidAssessmentCompletedHandler : IAsyncMessageHandler<TaskCompleted>
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
-        readonly OrbitServiceFacade _orbit;
+        readonly TaskServicesClient _orbit;
 
         const string SourceTaskTypeName = "RapidAssessment";
         const string TargetTaskTypeName = "DetailedAssessment";
 
-        public RapidAssessmentCompletedHandler(OrbitServiceFacade orbit)
+        public RapidAssessmentCompletedHandler(TaskServicesClient orbit)
         {
             _orbit = orbit;
         }
