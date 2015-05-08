@@ -6,7 +6,8 @@ This service can be deployed on-premise allowing integration with on-premise res
 
 ## How To Customize ##
 
-todo
+The SampleOrbitEventListenerService/MessageHandlers folder contains sample message handlers. You can create new message handlers or modify one of the samples
+that matches your needs. You can delete the message handlers you don't need (or leave them, if you'd prefer).
 
 ## How It Works ##
 

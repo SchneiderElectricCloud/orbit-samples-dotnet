@@ -17,6 +17,7 @@ namespace SampleOrbitEventListenerService.MessageHandlers
     {
         static readonly Logger Log = LogManager.GetCurrentClassLogger();
         readonly TaskServicesClient _orbit;
+        const string GeodatabaseVersion = "SDE.DEFAULT";
 
         static readonly HashSet<string> ExcludedFields =
             new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -34,10 +35,10 @@ namespace SampleOrbitEventListenerService.MessageHandlers
             new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 /* { FeatureLayerFieldName, TaskTypePropertyName }  */
-                {"INSPECTIONDATE", "DateInspected"}
+                {"POLEOBJECTID", "OBJECTID"}
             };
 
-        const string SourceTaskTypeName = "PoleInspection";
+        const string SourceTaskTypeName = "LinkPoleInspectionDevTest2";
         const string RelationshipName = "PoleInspection";
 
         public CreatePoleInspectionHandler(TaskServicesClient orbit)
@@ -64,10 +65,10 @@ namespace SampleOrbitEventListenerService.MessageHandlers
 
                     Layer relatedLayer = await featureServer.GetLayerAsync(relationship.RelatedTableId);
                     var relatedObject = CreateRecord(relatedLayer, task);
-                    
+
                     Dictionary<string, string> parameters = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
                     {
-                        { "gdbVersion", "SDE.DEFAULT"},
+                        { "gdbVersion", GeodatabaseVersion },
                         { "rollbackOnFailure", "true" },
                         { "features", JsonConvert.SerializeObject(new [] { relatedObject }) }
                     };
