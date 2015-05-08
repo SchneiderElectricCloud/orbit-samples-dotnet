@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using SE.Orbit.TaskServices;
+using SE.Orbit.TaskServices.Authentication;
 using SE.Orbit.TaskServices.Operations;
 
 namespace OrbitCoreSamples
