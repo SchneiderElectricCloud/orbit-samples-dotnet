@@ -2,20 +2,18 @@
 
 This repository contains the ArcFM Mobile (formerly, Orbit) Developer Samples for .NET (C# source code).
 
-## Instructions
-1. Optionally fork the repository.
-2. Clone the repository or download the .zip file.
-3. Open the DeveloperSamples.sln file in Visual Studio 2012 or later.
-4. In the Solution Explorer pane, right-click the solution node (Solution 'DeveloperSamples') and select "Manage NuGet Packages for Solution...".
-	- You may receive a message at the top of the Manage NuGet Packages dialog asking you to restore missing packages. If so, click the Restore button to have Visual Studio download any missing packages from NuGet.
-	- Alternatively, you can build the solution twice. The first build will trigger NuGet package restore. The second attempt will build the solution.
-
 ## Requirements
-1. Visual Studio 2012 or 2013 (Express or paid versions).
-2. .NET Framework 4.5 or later.
+
+1. Visual Studio 2013 (it will likely work with Visual Studio 2012)
+2. .NET Framework 4.5.1 or later.
 3. A <a href="https://infrastructurecommunity.schneider-electric.com/community/products/gis-products/arcfm-mobile">Schneider Electric Orbit account</a>.
 
 ## Samples
 
 ### Sample Orbit Event Listener Service
-Provides an example of listening for and reacting to Orbit task events. See SampleOrbitEventListenerService/README.md for additional details.
+
+Demonstrates how to listen and react to ArcFM Mobile task events. See SampleOrbitEventListenerService/README.md for additional details.
+
+### Orbit Core Samples
+
+Demonstrates how to use the [ArcFM Mobile (Orbit) Core SDK](https://www.nuget.org/packages/SE.Orbit.Core).
