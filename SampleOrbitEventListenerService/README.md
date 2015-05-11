@@ -13,15 +13,16 @@ This service can be deployed on-premises allowing integration with on-premises r
 	b. Otherwise, [download a .zip](https://github.com/SchneiderElectricCloud/orbit-samples-dotnet/archive/master.zip "Click to download the latest source") containing the latest code and extract the contents
 2. Open the Visual Studio Solution file (DeveloperSamples.sln)
 3. Update the App.config appSettings
-```xml
-<appSettings>
-  <add key="Microsoft.ServiceBus.ConnectionString" value="[SB-CONN-STRING]" />
-  <add key="Orbit.Events.TopicName" value="taskservices-[TENANT-ID]" />
-  <add key="Orbit.Events.SubscriptionName" value="default" />
+	```xml
+	<appSettings>
+	  <add key="Microsoft.ServiceBus.ConnectionString" value="[SB-CONN-STRING]" />
+	  <add key="Orbit.Events.TopicName" value="taskservices-[TENANT-ID]" />
+	  <add key="Orbit.Events.SubscriptionName" value="default" />
+	
+	  <add key="ApiKey" value="[ORBIT_APIKEY]" />
+	</appSettings>
+	```
 
-  <add key="ApiKey" value="[ORBIT_APIKEY]" />
-</appSettings>
-```
 	- ArcFM Mobile uses Azure ServiceBus topics & subscriptions (publish/subscribe) feature to publish events regarding task events. A ServiceBus connection string is required to listen to these events. These settings are tenant-specific and you must contact the ArcFM Mobile team for these settings:
 		- Microsoft.ServiceBus.ConnectionString
 		- Orbit.Events.TopicName
