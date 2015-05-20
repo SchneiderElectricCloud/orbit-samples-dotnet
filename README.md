@@ -12,7 +12,7 @@ This repository contains the ArcFM Mobile (formerly, Orbit) Developer Samples fo
 
 ### Sample Orbit Event Listener Service
 
-Demonstrates how to listen and react to ArcFM Mobile task events. See SampleOrbitEventListenerService/README.md for additional details.
+Demonstrates how to listen and react to ArcFM Mobile task events. See the project [README](https://github.com/SchneiderElectricCloud/orbit-samples-dotnet/tree/master/SampleOrbitEventListenerService) for additional details on how to customize and install.
 
 ### Orbit Core Samples
 
